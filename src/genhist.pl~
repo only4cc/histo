@@ -1,0 +1,32 @@
+# genhist.pl
+
+use strict;
+use warnings;
+use Template;
+
+my $titulo     = shift || "Titulo de la Cancion";
+my $col_data   = shift || "['Dinosaur', 'Length']";
+my $datafile   = $DATAFILE;
+
+my $data;
+my $line;
+my @r;
+open( F, $datafile ) or die "$!\n";
+while ( $line = <F> ) {
+	chomp($l);
+	@r = split ( /\,/, $l );
+	$data .= '"'.$r.'"';
+}
+close( F );
+
+my $file = 'tmpl/gc_histo.tmpl';
+my $data = {
+   titulo   => $titulo,
+   col_data => $col_data,
+   data     => "['Rex Humbert (Rex)', 4],\n ['Velociraptor (swift robber)', 1.8]"
+};
+ 
+my $template = Template->new();
+ 
+$template->process($file, $data)
+    or die "Template process failed: ", $template->error(), "\n";
